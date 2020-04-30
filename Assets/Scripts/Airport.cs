@@ -57,6 +57,18 @@ public class Airport : MonoBehaviour
 
         }
         Destroy(plane.gameObject);
+        float radius = 10000;
+        float power = 100000;
+        Vector3 explosionPos = DeadPlanesPool[PoolIndex].transform.position;
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
+        foreach (Collider hit in colliders)
+        {
+            Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+            if (rb != null && rb.GetComponent<Plane>() == null)
+                rb.AddExplosionForce(power, explosionPos, radius, -100.0F);
+        }
+
         PoolIndex++;
     }
 
