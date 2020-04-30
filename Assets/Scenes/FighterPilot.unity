@@ -150,13 +150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad48fe9d2b8718e44b20ff1dcf0596f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FollowCameraRig: {fileID: 350939891}
-  Camera: {fileID: 1106711008}
   Model: {fileID: 1051108760}
   ForwardSpeed: 10
   RotationLock: 0
   PitchAngle: 20
-  PitchSpeed: 50
+  DefaultPitchSpeed: 20
+  PowerPitchSpeed: 100
 --- !u!4 &289980285
 Transform:
   m_ObjectHideFlags: 0
@@ -169,6 +168,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1051108763}
+  - {fileID: 1106711009}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -182,7 +182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 350939891}
   m_Layer: 0
-  m_Name: CamRig
+  m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,10 +196,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350939890}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 18, z: -66}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1106711009}
+  m_Children: []
   m_Father: {fileID: 1051108763}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -294,6 +293,7 @@ GameObject:
   - component: {fileID: 1106711009}
   - component: {fileID: 1106711008}
   - component: {fileID: 1106711007}
+  - component: {fileID: 1106711010}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -360,12 +360,30 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1106711006}
   m_LocalRotation: {x: 0.043619405, y: -0, z: -0, w: 0.9990483}
-  m_LocalPosition: {x: 0, y: 22, z: -60}
+  m_LocalPosition: {x: 0, y: 18, z: -66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 350939891}
-  m_RootOrder: 0
+  m_Father: {fileID: 289980285}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 5, y: 0, z: 0}
+--- !u!114 &1106711010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106711006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa4698b8ce12e843a649640e9a5dca6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Cam: {fileID: 1106711008}
+  CameraPosiion: {fileID: 350939890}
+  FighterModel: {fileID: 1051108760}
+  Fighter: {fileID: 289980284}
+  LookLength: 10
+  Bias: 0.5
 --- !u!1 &1294003656
 GameObject:
   m_ObjectHideFlags: 0

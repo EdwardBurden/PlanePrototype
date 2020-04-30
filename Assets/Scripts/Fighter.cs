@@ -14,20 +14,14 @@ public class Fighter : MonoBehaviour
     public float PowerPitchSpeed = 1;
 
     private Vector3 ForwardBeforeLock;
+    public float ForwardAcceleration;
+    public float MaxSpeed;
+    public float MinSpeed;
 
     void Start()
     {
         RotationLock = false;
         PitchSpeed = DefaultPitchSpeed;
-    }
-
-    public void Switch()
-    {
-        RotationLock = !RotationLock;
-        if (RotationLock)
-            PitchSpeed = PowerPitchSpeed;
-        else
-            PitchSpeed = DefaultPitchSpeed;
     }
 
     void Update()
@@ -44,12 +38,19 @@ public class Fighter : MonoBehaviour
         }
     }
 
-    private void HandleInput()
+    private void Switch()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Switch();
-        }
+        RotationLock = !RotationLock;
+        if (RotationLock)
+            PitchSpeed = PowerPitchSpeed;
+        else
+            PitchSpeed = DefaultPitchSpeed;
+    }
+
+
+    private void HandleYaw()
+    {
+
         float angle = Model.transform.localEulerAngles.z;
         angle %= 360;
         angle = angle > 180 ? angle - 360 : angle;
@@ -80,5 +81,59 @@ public class Fighter : MonoBehaviour
             Vector3 eulers = new Vector3(Model.transform.localEulerAngles.x, Model.transform.localEulerAngles.y, 0);
             Model.transform.rotation = Quaternion.RotateTowards(Model.transform.rotation, Quaternion.Euler(eulers), PitchSpeed * Time.deltaTime);
         }
+    }
+
+    private void HandlePitch()
+    {
+        float angle = Model.transform.localEulerAngles.x;
+        Vector3 eulers = Vector3.zero;
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+                eulers = new Vector3(-PitchSpeed * Time.deltaTime, 0, 0);
+            else
+            {
+                if (Input.GetKey(KeyCode.DownArrow))
+                    eulers = new Vector3(PitchSpeed * Time.deltaTime, 0, 0);
+            }
+            Model.transform.Rotate(eulers);
+        }
+    }
+
+    private void HandleRoll()
+    {
+
+    }
+
+    private void HandleSpeed()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            if (ForwardSpeed + ForwardAcceleration * Time.deltaTime <= MaxSpeed)
+                ForwardSpeed += ForwardAcceleration * Time.deltaTime;
+
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            if (ForwardSpeed - ForwardAcceleration * Time.deltaTime >= MinSpeed)
+                ForwardSpeed -= ForwardAcceleration * Time.deltaTime;
+        }
+
+    }
+
+
+    private void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Switch();
+        }
+
+        HandleSpeed();
+        HandleYaw();
+        HandlePitch();
+        HandleRoll();
+
+
     }
 }
