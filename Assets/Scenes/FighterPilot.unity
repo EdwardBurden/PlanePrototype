@@ -151,11 +151,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Model: {fileID: 1051108760}
-  ForwardSpeed: 10
+  ForwardSpeed: 1
   RotationLock: 0
   PitchAngle: 20
   DefaultPitchSpeed: 20
   PowerPitchSpeed: 100
+  ForwardAcceleration: 30
+  MaxSpeed: 100
+  MinSpeed: 1
 --- !u!4 &289980285
 Transform:
   m_ObjectHideFlags: 0
@@ -274,14 +277,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1051108760}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.012733444, y: -0, z: -0, w: 0.99991894}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 350939891}
   m_Father: {fileID: 289980285}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -1.4590001, y: 0, z: 0}
 --- !u!1 &1106711006
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +386,7 @@ MonoBehaviour:
   FighterModel: {fileID: 1051108760}
   Fighter: {fileID: 289980284}
   LookLength: 10
-  Bias: 0.5
+  SpeedModifier: 1
 --- !u!1 &1294003656
 GameObject:
   m_ObjectHideFlags: 0
