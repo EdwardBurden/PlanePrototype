@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plane : MonoBehaviour
+public class Plane : InteractiveObject
 {
     public float Dampener = 0.000001f;
     public int Health;
@@ -15,21 +16,19 @@ public class Plane : MonoBehaviour
     public float Speed;
 
     public Vector3 Target;
-    public Vector3 Directionnormalized;
 
     private bool Dying;
     public delegate void PlaneEvent(Plane plane);
     public event PlaneEvent Death;
 
-    public void Init(int health, int fuel, int passengers)
+    public void Init(int health, int fuel, int passengers, Vector3 direction)
     {
         Health = health;
         Fuel = fuel;
         Passengers = passengers;
-        Vector3 direction = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
-        Target = direction.normalized;
+        Target = direction;
         Dying = false;
-        Speed = Random.Range(MinSpeed, Maxspeed);
+        Speed = UnityEngine.Random.Range(MinSpeed, Maxspeed);
     }
 
 
@@ -52,18 +51,21 @@ public class Plane : MonoBehaviour
 
         if (!Dying)
         {
-            Fuel -= ((Speed * Speed) * Dampener*Time.deltaTime);
+            Fuel -= ((Speed * Speed) * Dampener * Time.deltaTime);
             if (Fuel > 0 && Health > 0)
             {
-                Vector3 targetDirection = Target + transform.localPosition;
                 Rigidbody.velocity = Target * Speed;
-                this.transform.rotation = Quaternion.LookRotation(targetDirection);
-
+                Rigidbody.rotation = (Quaternion.LookRotation(Target.normalized));
             }
             else
             {
                 OnDeath();
             }
         }
+    }
+
+    internal void SetTarget(Vector3 hitPoint)
+    {
+        Target = (new Vector3(hitPoint.x, transform.position.y, hitPoint.z) - transform.position).normalized;
     }
 }

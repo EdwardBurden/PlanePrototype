@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Airport : MonoBehaviour
 {
+    public Transform DynamicSpawn;
+    public Canvas Canvas;
+    public AirportUI UIPrefab;
+    private AirportUI UI;
     int PoolIndex;
     int PoolSize = 10;
     GameObject[] DeadPlanesPool;
@@ -23,6 +27,8 @@ public class Airport : MonoBehaviour
     private void Start()
     {
         DeadPlanesPool = new GameObject[PoolSize];
+        UI = Instantiate(UIPrefab, Canvas.transform);
+        UI.Init(this);
         StartCoroutine(Spawn());
     }
     private IEnumerator Spawn()
@@ -77,11 +83,15 @@ public class Airport : MonoBehaviour
     {
         if (PlanePrefab)
         {
-            Plane plane = Instantiate(PlanePrefab, this.transform);
+            Vector3 direction = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
+            Vector3 target = direction + transform.position;
+            Quaternion q = Quaternion.LookRotation(target, Vector3.up);
+
+            Plane plane = Instantiate(PlanePrefab, transform.position, q, DynamicSpawn.transform);
             int passengers = Random.Range(MinPassengers, MaxPassengers);
             int health = Random.Range(MinHealth, MaxHealth);
             int fuel = Random.Range(MinFuel, MaxFuel);
-            plane.Init(health, fuel, passengers);
+            plane.Init(health, fuel, passengers, direction.normalized);
             plane.Death += OnDeath;
         }
     }
