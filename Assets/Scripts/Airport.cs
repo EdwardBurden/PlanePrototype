@@ -13,8 +13,6 @@ public class Airport : MonoBehaviour
     GameObject[] DeadPlanesPool;
 
     //plane generateion
-    public int MaxHealth;
-    public int MinHealth;
     public int MaxFuel;
     public int MinFuel;
     public int MaxPassengers;
@@ -59,7 +57,7 @@ public class Airport : MonoBehaviour
         DeadPlanesPool[PoolIndex] = Instantiate(PlaneDead, plane.transform.position, plane.transform.rotation, null);
         foreach (Rigidbody rigidbody in DeadPlanesPool[PoolIndex].GetComponentsInChildren<Rigidbody>())
         {
-            rigidbody.velocity = plane.Rigidbody.velocity;
+            rigidbody.velocity = plane.GetRigidBodyVelocity();
 
         }
         Destroy(plane.gameObject);
@@ -89,9 +87,8 @@ public class Airport : MonoBehaviour
 
             Plane plane = Instantiate(PlanePrefab, transform.position, q, DynamicSpawn.transform);
             int passengers = Random.Range(MinPassengers, MaxPassengers);
-            int health = Random.Range(MinHealth, MaxHealth);
             int fuel = Random.Range(MinFuel, MaxFuel);
-            plane.Init(health, fuel, passengers, direction.normalized);
+            plane.Init(fuel, passengers, direction.normalized);
             plane.Death += OnDeath;
         }
     }
