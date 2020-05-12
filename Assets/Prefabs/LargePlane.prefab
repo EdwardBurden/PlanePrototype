@@ -96,17 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e3f2b603844174abd29e2e82dd88e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DepartedAirport: {fileID: 0}
-  TargetAirport: {fileID: 0}
-  Dampener: 0.001
-  Fuel: 0
-  Passengers: 0
-  Rigidbody: {fileID: 7458096639063326054}
+  UiPrefab: {fileID: 1869723861978263799, guid: 633bc63060c2140e7b6603019c5c13e2,
+    type: 3}
   MinSpeed: 100
   Maxspeed: 150
-  Speed: 0
-  Target: {x: 0, y: 0, z: 0}
-  Dying: 0
   Selection: {fileID: 7348514866489569437}
 --- !u!54 &7458096639063326054
 Rigidbody:

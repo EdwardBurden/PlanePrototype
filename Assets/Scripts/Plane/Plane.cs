@@ -5,23 +5,20 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
-    public Airport DepartedAirport;
-    public Airport TargetAirport;
+    private PlaneController PlaneController;
 
-    public float Dampener = 0.000001f;
-    public float Fuel;
-    public int Passengers;
-    public Rigidbody Rigidbody;
+    public PlaneUi UiPrefab;
+
+    private PlaneUi Ui;
+
     public float MinSpeed;
     public float Maxspeed;
-    public float Speed;
-    public Vector3 Target;
-    public bool Dying;
+
     public delegate void PlaneEvent(Plane plane);
     public event PlaneEvent Death;
-    public PlaneState State;
-    public ParticleSystem Selection;
 
+    public ParticleSystem Selection;
+    private bool Selected;
 
     public virtual void Awake()
     {
@@ -30,48 +27,67 @@ public class Plane : MonoBehaviour
 
     public void OnHover()
     {
-        State.OnHover();
+        if (PlaneController.IsInteractable)
+        {
+            if (!Selected)
+            {
+                ParticleSystem.MainModule main = Selection.main;
+                main.startColor = new ParticleSystem.MinMaxGradient(Color.blue);
+                Selection.Play();
+            }
+        }
+
     }
+
     public void OffHover()
     {
-        State.OffHover();
+        if (PlaneController.IsInteractable)
+        {
+            if (!Selected)
+            {
+                Selection.Stop();
+            }
+        }
     }
 
     public void OnClick()
     {
-        State.OnClick();
+        if (PlaneController.IsInteractable)
+        {
+            Selected = true;
+            ParticleSystem.MainModule main = Selection.main;
+            main.startColor = new ParticleSystem.MinMaxGradient(Color.green); Selection.Play();
+        }
+
     }
     public void OffClick()
     {
-        State.OffClick();
+        if (PlaneController.IsInteractable)
+        {
+            Selected = false;
+            Selection.Stop();
+        }
     }
 
-    public void ChangeState(Type type)
+    internal int GetPassengers()
     {
-        if (State != null)
-            State.DeActivate();
-        State = (PlaneState)Activator.CreateInstance(type);
-        State.Activate(this);
+        return PlaneController.Passengers;
     }
 
-    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to)
+    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to , Canvas canvas)
     {
-        ChangeState(typeof(TakeOffState));
-        Fuel = fuel;
-        Passengers = passengers;
-        Target = direction;
-        Dying = false;
-        Speed = UnityEngine.Random.Range(MinSpeed, Maxspeed);
-        DepartedAirport = from;
-        TargetAirport = to;
-
+        Selection.Stop();
+        PlaneController = new PlaneController(this);
+        PlaneController.TakeOff(fuel, passengers, direction, from, to);
+        Ui = Instantiate(UiPrefab, canvas.transform);
+        Ui.Init(this);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Airport"))
         {
-            ChangeState(typeof(LandingState));
+            PlaneController.Land(collision.gameObject.GetComponentInParent<Airport>());
         }
         else
         {
@@ -79,9 +95,14 @@ public class Plane : MonoBehaviour
         }
     }
 
+    internal void DestroyUI()
+    {
+        Destroy(Ui.gameObject);
+    }
+
     private void Update()
     {
-        State.HandleUpdateBehaviour();
+        PlaneController.HandleUpdate();
     }
 
     public void Die()
@@ -89,20 +110,8 @@ public class Plane : MonoBehaviour
         Death.Invoke(this);
     }
 
-    public void Rest()
-    {
-        Debug.Log("Success");
-        Destroy(this.gameObject);
-
-    }
-
     internal void SetTarget(Vector3 hitPoint)
     {
-        Target = (new Vector3(hitPoint.x, transform.position.y, hitPoint.z) - transform.position).normalized;
-    }
-
-    internal Vector3 GetRigidBodyVelocity()
-    {
-        return Rigidbody.velocity;
+        PlaneController.ChangeDirection(hitPoint);
     }
 }

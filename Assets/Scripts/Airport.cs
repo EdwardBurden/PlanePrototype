@@ -24,7 +24,7 @@ public class Airport : MonoBehaviour
     public int MinFuel;
     public int MaxPassengers;
     public int MinPassengers;
-
+    public int PassengersPool;
 
     public int PlaneAmount;
     public float TimeInterval;
@@ -51,6 +51,14 @@ public class Airport : MonoBehaviour
         }
     }
 
+    public void OnLand(Plane plane)
+    {
+        plane.DestroyUI();
+        PassengersPool += plane.GetPassengers();
+        UI.UpdatePassengers(PassengersPool);
+        Destroy(plane.gameObject);
+    }
+
     public void OnDeath(Plane plane)
     {
         if (PoolIndex >= PoolSize)
@@ -61,9 +69,10 @@ public class Airport : MonoBehaviour
         DeadPlanesPool[PoolIndex] = Instantiate(PlaneDead, plane.transform.position, plane.transform.rotation, null);
         foreach (Rigidbody rigidbody in DeadPlanesPool[PoolIndex].GetComponentsInChildren<Rigidbody>())
         {
-            rigidbody.velocity = plane.GetRigidBodyVelocity();
+            rigidbody.velocity = plane.GetComponent<Rigidbody>().velocity;
 
         }
+        plane.DestroyUI();
         Destroy(plane.gameObject);
         float radius = 10000;
         float power = 100000;
@@ -90,10 +99,11 @@ public class Airport : MonoBehaviour
             Quaternion q = Quaternion.LookRotation(target, Vector3.up);
 
             Plane plane = Instantiate(PlanePrefab, transform.position, q, DynamicSpawn.transform);
-            int passengers = Random.Range(MinPassengers, MaxPassengers);
+            int passengers = Random.Range(MinPassengers, MaxPassengers); PassengersPool -= passengers;
             int fuel = Random.Range(MinFuel, MaxFuel);
-            plane.Init(fuel, passengers, direction.normalized, this, null);
+            plane.Init(fuel, passengers, direction.normalized, this, null, Canvas);
             plane.Death += OnDeath;
+            UI.UpdatePassengers(PassengersPool);
         }
     }
 }
