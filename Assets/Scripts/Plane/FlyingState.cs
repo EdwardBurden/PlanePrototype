@@ -10,11 +10,13 @@ public class FlyingState : PlaneState
     public override void Activate(Plane plane)
     {
         this.plane = plane;
+        plane.Rigidbody.isKinematic = false;
+        plane.GetComponent<Collider>().enabled = true;
     }
 
     public override void DeActivate()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public override void HandleUpdateBehaviour()

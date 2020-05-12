@@ -1302,6 +1302,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e649954551228448b4bd198657be405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &429855976
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 429855977}
+  m_Layer: 0
+  m_Name: PlaneSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &429855977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429855976}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -29.199997, y: 3.800003, z: -13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1944382981}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &478162000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 478162001}
+  m_Layer: 0
+  m_Name: PlaneEntrance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &478162001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478162000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 131.8, y: 68, z: -13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1944382981}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &694057992
 Mesh:
   m_ObjectHideFlags: 0
@@ -1730,6 +1790,36 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &858206203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 858206204}
+  m_Layer: 0
+  m_Name: PlaneExit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &858206204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858206203}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -218.2, y: 68, z: -13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1944382981}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &928109721
 Mesh:
   m_ObjectHideFlags: 0
@@ -2014,15 +2104,30 @@ PrefabInstance:
       propertyPath: TimeInterval
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 785494014668229711, guid: 004552818bcc0c6479cb15223200403a,
+        type: 3}
+      propertyPath: SpawnPoint
+      value: 
+      objectReference: {fileID: 429855977}
+    - target: {fileID: 785494014668229711, guid: 004552818bcc0c6479cb15223200403a,
+        type: 3}
+      propertyPath: Entrance
+      value: 
+      objectReference: {fileID: 478162001}
+    - target: {fileID: 785494014668229711, guid: 004552818bcc0c6479cb15223200403a,
+        type: 3}
+      propertyPath: Exit
+      value: 
+      objectReference: {fileID: 858206204}
     - target: {fileID: 785494014668229715, guid: 004552818bcc0c6479cb15223200403a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 214
+      value: 204
       objectReference: {fileID: 0}
     - target: {fileID: 785494014668229715, guid: 004552818bcc0c6479cb15223200403a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 100
+      value: 105
       objectReference: {fileID: 0}
     - target: {fileID: 785494014668229715, guid: 004552818bcc0c6479cb15223200403a,
         type: 3}
@@ -5191,3 +5296,9 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1944382981 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 785494014668229715, guid: 004552818bcc0c6479cb15223200403a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1112132660}
+  m_PrefabAsset: {fileID: 0}

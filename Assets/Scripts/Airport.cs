@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Airport : MonoBehaviour
 {
+    public Transform Entrance;
+    public Transform SpawnPoint;
+    public Transform Exit;
+
+    public Plane PlanePrefab;
+    public GameObject PlaneDead;
+
     public Transform DynamicSpawn;
     public Canvas Canvas;
     public AirportUI UIPrefab;
-    private AirportUI UI;
+    AirportUI UI;
     int PoolIndex;
     int PoolSize = 10;
     GameObject[] DeadPlanesPool;
@@ -22,6 +29,7 @@ public class Airport : MonoBehaviour
     public int PlaneAmount;
     public float TimeInterval;
     public float TimeIntervalAcceleration;
+
     private void Start()
     {
         DeadPlanesPool = new GameObject[PoolSize];
@@ -29,6 +37,7 @@ public class Airport : MonoBehaviour
         UI.Init(this);
         StartCoroutine(Spawn());
     }
+
     private IEnumerator Spawn()
     {
         int i = 0;
@@ -41,11 +50,6 @@ public class Airport : MonoBehaviour
                 TimeInterval -= TimeIntervalAcceleration;
         }
     }
-    public Plane PlanePrefab;
-    public GameObject PlaneDead;
-
-
-
 
     public void OnDeath(Plane plane)
     {
@@ -88,7 +92,7 @@ public class Airport : MonoBehaviour
             Plane plane = Instantiate(PlanePrefab, transform.position, q, DynamicSpawn.transform);
             int passengers = Random.Range(MinPassengers, MaxPassengers);
             int fuel = Random.Range(MinFuel, MaxFuel);
-            plane.Init(fuel, passengers, direction.normalized);
+            plane.Init(fuel, passengers, direction.normalized, this, null);
             plane.Death += OnDeath;
         }
     }

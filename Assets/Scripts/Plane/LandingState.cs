@@ -2,29 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TakeOffState : PlaneState
+public class LandingState : PlaneState
 {
     private Plane Plane;
+    private float Timme = 0;
+
     public override void Activate(Plane plane)
     {
         Plane = plane;
-        plane.StartCoroutine(WaitAndFly());
+        plane.Rigidbody.isKinematic = true;
+        plane.GetComponent<Collider>().enabled = false;
     }
 
-    private IEnumerator WaitAndFly()
-    {
-        yield return new WaitForSeconds(3);
-        Plane.ChangeState(typeof(FlyingState));
-
-    }
     public override void DeActivate()
     {
-      //  throw new System.NotImplementedException();
+        throw new System.NotImplementedException();
     }
 
     public override void HandleUpdateBehaviour()
     {
-        //throw new System.NotImplementedException();
+        Timme += Time.deltaTime;
+        Plane.transform.position = Vector3.Lerp(Plane.DepartedAirport.Entrance.position, Plane.DepartedAirport.SpawnPoint.position, Timme);
+        Plane.transform.rotation = (Quaternion.LookRotation((Plane.transform.position - Plane.DepartedAirport.Entrance.position)).normalized);
+        if (Vector3.Distance(Plane.transform.position, Plane.DepartedAirport.SpawnPoint.position) < 1)
+        {
+            Plane.Rest();
+        }
     }
 
     public override void OffClick()

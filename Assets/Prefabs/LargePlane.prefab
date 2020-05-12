@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5934624366392289021}
   - component: {fileID: 7458096639063326054}
   - component: {fileID: 216038704561967732}
+  - component: {fileID: 8484276938042258115}
   m_Layer: 0
   m_Name: LargePlane
   m_TagString: Untagged
@@ -95,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e3f2b603844174abd29e2e82dd88e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Selection: {fileID: 7348514866489569437}
+  DepartedAirport: {fileID: 0}
+  TargetAirport: {fileID: 0}
   Dampener: 0.001
-  Health: 0
   Fuel: 0
   Passengers: 0
   Rigidbody: {fileID: 7458096639063326054}
@@ -105,6 +106,8 @@ MonoBehaviour:
   Maxspeed: 150
   Speed: 0
   Target: {x: 0, y: 0, z: 0}
+  Dying: 0
+  Selection: {fileID: 7348514866489569437}
 --- !u!54 &7458096639063326054
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -130,11 +133,24 @@ MeshCollider:
   m_GameObject: {fileID: 8230448865207651290}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 6a50534f74198cb4eb3d7b13863f4698, type: 2}
+--- !u!65 &8484276938042258115
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8230448865207651290}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 130.58, y: 83.7, z: 104.9}
+  m_Center: {x: 0.5, y: 5.9525204, z: -7}
 --- !u!1 &8786094898832686071
 GameObject:
   m_ObjectHideFlags: 0

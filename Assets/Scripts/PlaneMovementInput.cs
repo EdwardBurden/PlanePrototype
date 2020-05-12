@@ -47,16 +47,15 @@ public class PlaneMovementInput : MonoBehaviour
             {
                 if (ClickPlane)
                 {
-                    RayCastInfo<PlaneLocation> Floor = CheckIfObjectIsInFocus<PlaneLocation>();
-                    if (Floor.Focused)
+                    RaycastHit hit = CheckIfObjectIsInFocus("PlaneLocation");
+                    if (hit.collider != null)
                     {
-                        ClickPlane.SetTarget(Floor.HitInfo.point);
+                        ClickPlane.SetTarget(hit.point);
 
                     }
-
-                    ClickPlane.OffClick();
+                    //ClickPlane.OffClick();
                 }
-                ClickPlane = null;
+                //ClickPlane = null;
 
             }
         }
@@ -82,6 +81,28 @@ public class PlaneMovementInput : MonoBehaviour
                 HoverPlane.OffHover();
             HoverPlane = null;
         }
+    }
+
+    public static RaycastHit CheckIfObjectIsInFocus(string tag)
+    {
+        RaycastHit hit = new RaycastHit();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float distance = 10000;
+        RaycastHit[] raycasts = Physics.RaycastAll(ray);
+        for (int i = 0; i < raycasts.Length; i++)
+        {
+            if (raycasts[i].distance < distance)
+            {
+                distance = raycasts[i].distance;
+                bool found = raycasts[i].collider.gameObject.CompareTag(tag);
+                if (found)
+                {
+                    hit = raycasts[i];
+                }
+
+            }
+        }
+        return hit;
     }
 
     public static RayCastInfo<T> CheckIfObjectIsInFocus<T>() where T : MonoBehaviour

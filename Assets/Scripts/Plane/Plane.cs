@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
+    public Airport DepartedAirport;
+    public Airport TargetAirport;
+
     public float Dampener = 0.000001f;
     public float Fuel;
     public int Passengers;
@@ -51,7 +54,7 @@ public class Plane : MonoBehaviour
         State.Activate(this);
     }
 
-    public void Init(int fuel, int passengers, Vector3 direction)
+    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to)
     {
         ChangeState(typeof(TakeOffState));
         Fuel = fuel;
@@ -59,20 +62,38 @@ public class Plane : MonoBehaviour
         Target = direction;
         Dying = false;
         Speed = UnityEngine.Random.Range(MinSpeed, Maxspeed);
+        DepartedAirport = from;
+        TargetAirport = to;
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Death.Invoke(this);
+        if (collision.gameObject.CompareTag("Airport"))
+        {
+            ChangeState(typeof(LandingState));
+        }
+        else
+        {
+            Die();
+        }
     }
 
     private void Update()
     {
         State.HandleUpdateBehaviour();
     }
+
     public void Die()
     {
         Death.Invoke(this);
+    }
+
+    public void Rest()
+    {
+        Debug.Log("Success");
+        Destroy(this.gameObject);
+
     }
 
     internal void SetTarget(Vector3 hitPoint)
