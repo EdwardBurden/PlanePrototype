@@ -14,3 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlanePrefab: {fileID: 5934624366392289021, guid: eb85b5bfa27ed0747baca0e2fb43bb07,
     type: 3}
+  StartingAirportNumber: 2
+  AirportIncreasePerWave: 0.25
+  StartingFlightPerAirport: 2
+  FlightIncreasePerWave: 0.1
+  FlightTimeInterval: 5
+  FlightTimeIntervalAcceleration: 0.1

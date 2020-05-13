@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Airport : MonoBehaviour
 {
+    public int AppearanceOrder;
+
     public Transform Entrance;
     public Transform SpawnPoint;
     public Transform Exit;
@@ -20,28 +24,36 @@ public class Airport : MonoBehaviour
     public int MinPassengers;
     public int PassengersPool;
 
-    public int PlaneAmount;
-    public float TimeInterval;
-    public float TimeIntervalAcceleration;
+    public delegate void WaveEvent();
+    public event WaveEvent AirportEmptied;
+
+    public bool FlightsActive;
 
     private void Start()
     {
         UI = Instantiate(UIPrefab, Canvas.transform);
         UI.Init(this);
-        StartCoroutine(Spawn());
+        FlightsActive = false;
     }
 
-    private IEnumerator Spawn()
+    private IEnumerator Spawn(int amount, float time)
     {
+        FlightsActive = true;
         int i = 0;
-        while (i < PlaneAmount)
+        while (i < amount)
         {
+            yield return new WaitForSeconds(time);
             SpawnPlane();
-            yield return new WaitForSeconds(TimeInterval);
             i++;
-            if (TimeInterval - TimeIntervalAcceleration > 0.1)
-                TimeInterval -= TimeIntervalAcceleration;
         }
+        FlightsActive = false;
+        AirportEmptied.Invoke();
+    }
+
+    internal void ScheduleFlights(int flightNumber, float time)
+    {
+        StartCoroutine(Spawn(flightNumber, time));
+
     }
 
     public void OnLand(Plane plane)

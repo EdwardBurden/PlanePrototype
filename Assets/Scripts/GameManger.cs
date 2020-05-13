@@ -10,8 +10,20 @@ public class GameManger : MonoBehaviour
 
     public static GameManger Instance;
 
+    private Wave Wave;
     private void Awake()
     {
         Instance = this;
+        Wave = new Wave(this);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Wave.NextWave();
+        }
+    }
+
+
 }
