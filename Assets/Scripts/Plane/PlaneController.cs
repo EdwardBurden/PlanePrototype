@@ -12,7 +12,7 @@ public class PlaneController
         Flying,
         Landing
     }
-    public float Dampener = 0.000001f;
+    public float Dampener = 0.0001f;
 
     private PlaneState State;
     private Plane PlaneObject;
@@ -34,6 +34,8 @@ public class PlaneController
     {
         PlaneObject = planeObject;
         State = PlaneState.Still;
+        PlaneObject.GetComponent<Rigidbody>().isKinematic = true;
+        PlaneObject.GetComponent<Collider>().enabled = false;
 
     }
 
@@ -62,7 +64,7 @@ public class PlaneController
         Timer += Time.deltaTime;
         PlaneObject.transform.position = Vector3.Lerp(Origin.SpawnPoint.position, Origin.Exit.position, Timer);
         PlaneObject.transform.rotation = (Quaternion.LookRotation((Origin.Exit.position - PlaneObject.transform.position)).normalized);
-        if (Vector3.Distance(PlaneObject.transform.position, Origin.Exit.position) < 1)
+        if (Vector3.Distance(PlaneObject.transform.position, Origin.Exit.position) < 10)
         {
             Fly();
         }
@@ -70,11 +72,13 @@ public class PlaneController
 
     private void HandleFlying()
     {
-        Fuel -= ((Speed * Speed) * Dampener * Time.deltaTime);
+        float decrease = ((Speed * Speed) * Dampener * Time.deltaTime);
+        Fuel -= decrease;
         if (Fuel > 0)
         {
-            PlaneObject.GetComponent<Rigidbody>().velocity = CurrentDirection * Speed;
-            PlaneObject.GetComponent<Rigidbody>().rotation = (Quaternion.LookRotation(CurrentDirection.normalized));
+            //PlaneObject.GetComponent<Rigidbody>().velocity = CurrentDirection * Speed;
+            PlaneObject.GetComponent<Rigidbody>().rotation = Quaternion.Lerp(PlaneObject.GetComponent<Rigidbody>().rotation, Quaternion.LookRotation(CurrentDirection), Time.deltaTime);
+           PlaneObject.GetComponent<Rigidbody>().velocity = PlaneObject.transform.forward * Speed;
         }
         else
         {
@@ -98,7 +102,7 @@ public class PlaneController
         State = PlaneState.TakeOff;
         Fuel = fuel;
         Passengers = passenegers;
-        CurrentDirection = direction;
+        CurrentDirection = direction.normalized;
         Speed = UnityEngine.Random.Range(PlaneObject.MinSpeed, PlaneObject.Maxspeed);
         Origin = from;
         Destination = to;

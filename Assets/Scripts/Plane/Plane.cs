@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
+    public GameObject DeadPlanePrefab;
     private PlaneController PlaneController;
 
     public PlaneUi UiPrefab;
@@ -20,9 +21,11 @@ public class Plane : MonoBehaviour
     public ParticleSystem Selection;
     private bool Selected;
 
+    private Color DebugLineColor;
+
     public virtual void Awake()
     {
-        Selection.Stop();
+        Selection.Stop(); DebugLineColor = new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
     }
 
     public void OnHover()
@@ -37,6 +40,16 @@ public class Plane : MonoBehaviour
             }
         }
 
+    }
+
+    internal float GetPassengers()
+    {
+        return PlaneController.Passengers;
+    }
+
+    internal float GetSpeed()
+    {
+        return PlaneController.Speed;
     }
 
     public void OffHover()
@@ -69,12 +82,12 @@ public class Plane : MonoBehaviour
         }
     }
 
-    internal int GetPassengers()
+    internal float GetFuel()
     {
-        return PlaneController.Passengers;
+        return PlaneController.Fuel;
     }
 
-    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to , Canvas canvas)
+    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to, Canvas canvas)
     {
         Selection.Stop();
         PlaneController = new PlaneController(this);
@@ -103,6 +116,7 @@ public class Plane : MonoBehaviour
     private void Update()
     {
         PlaneController.HandleUpdate();
+        Debug.DrawLine(this.transform.position, this.transform.position + (this.transform.forward * 30), DebugLineColor, 1);
     }
 
     public void Die()

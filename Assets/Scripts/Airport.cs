@@ -8,16 +8,10 @@ public class Airport : MonoBehaviour
     public Transform SpawnPoint;
     public Transform Exit;
 
-    public Plane PlanePrefab;
-    public GameObject PlaneDead;
-
     public Transform DynamicSpawn;
     public Canvas Canvas;
     public AirportUI UIPrefab;
     AirportUI UI;
-    int PoolIndex;
-    int PoolSize = 10;
-    GameObject[] DeadPlanesPool;
 
     //plane generateion
     public int MaxFuel;
@@ -32,7 +26,6 @@ public class Airport : MonoBehaviour
 
     private void Start()
     {
-        DeadPlanesPool = new GameObject[PoolSize];
         UI = Instantiate(UIPrefab, Canvas.transform);
         UI.Init(this);
         StartCoroutine(Spawn());
@@ -54,56 +47,21 @@ public class Airport : MonoBehaviour
     public void OnLand(Plane plane)
     {
         plane.DestroyUI();
-        PassengersPool += plane.GetPassengers();
+        PassengersPool += (int)plane.GetPassengers();
         UI.UpdatePassengers(PassengersPool);
         Destroy(plane.gameObject);
     }
 
-    public void OnDeath(Plane plane)
-    {
-        if (PoolIndex >= PoolSize)
-            PoolIndex = 0;
-        if (DeadPlanesPool[PoolIndex] != null)
-            Destroy(DeadPlanesPool[PoolIndex]);
-
-        DeadPlanesPool[PoolIndex] = Instantiate(PlaneDead, plane.transform.position, plane.transform.rotation, null);
-        foreach (Rigidbody rigidbody in DeadPlanesPool[PoolIndex].GetComponentsInChildren<Rigidbody>())
-        {
-            rigidbody.velocity = plane.GetComponent<Rigidbody>().velocity;
-
-        }
-        plane.DestroyUI();
-        Destroy(plane.gameObject);
-        float radius = 10000;
-        float power = 100000;
-        Vector3 explosionPos = DeadPlanesPool[PoolIndex].transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-        foreach (Collider hit in colliders)
-        {
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
-
-            if (rb != null && rb.GetComponent<Plane>() == null)
-                rb.AddExplosionForce(power, explosionPos, radius, -100.0F);
-        }
-
-        PoolIndex++;
-    }
-
-
     public void SpawnPlane()
     {
-        if (PlanePrefab)
-        {
-            Vector3 direction = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
-            Vector3 target = direction + transform.position;
-            Quaternion q = Quaternion.LookRotation(target, Vector3.up);
 
-            Plane plane = Instantiate(PlanePrefab, transform.position, q, DynamicSpawn.transform);
-            int passengers = Random.Range(MinPassengers, MaxPassengers); PassengersPool -= passengers;
-            int fuel = Random.Range(MinFuel, MaxFuel);
-            plane.Init(fuel, passengers, direction.normalized, this, null, Canvas);
-            plane.Death += OnDeath;
-            UI.UpdatePassengers(PassengersPool);
-        }
+        Vector3 direction = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
+        Plane plane = Instantiate(GameManger.Instance.Settings.PlanePrefab, transform.position, Quaternion.identity, DynamicSpawn.transform);
+        int passengers = Random.Range(MinPassengers, MaxPassengers); PassengersPool -= passengers;
+        int fuel = Random.Range(MinFuel, MaxFuel);
+        plane.Init(fuel, passengers, direction, this, null, Canvas);
+        plane.Death += GameManger.Instance.PlanePool.OnDeath;
+        UI.UpdatePassengers(PassengersPool);
+
     }
 }
