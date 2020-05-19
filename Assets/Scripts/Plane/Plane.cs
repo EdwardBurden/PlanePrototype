@@ -9,7 +9,7 @@ public class Plane : MonoBehaviour
     private PlaneController PlaneController;
 
     public PlaneUi UiPrefab;
-
+    public Transform PlaneForward;
     private PlaneUi Ui;
 
     public float MinSpeed;
@@ -116,7 +116,8 @@ public class Plane : MonoBehaviour
     private void Update()
     {
         PlaneController.HandleUpdate();
-        Debug.DrawLine(this.transform.position, this.transform.position + (this.transform.forward * 30), DebugLineColor, 1);
+        PlaneForward.forward = PlaneController.CurrentDirection;
+     //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
     }
 
     public void Die()

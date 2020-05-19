@@ -26,6 +26,7 @@ public class PlaneController
     public float Fuel;
     public int Passengers;
     public float Speed;
+    public float TurningSpeed;
     public Vector3 CurrentDirection;
 
     private float Timer;
@@ -76,9 +77,8 @@ public class PlaneController
         Fuel -= decrease;
         if (Fuel > 0)
         {
-            //PlaneObject.GetComponent<Rigidbody>().velocity = CurrentDirection * Speed;
-            PlaneObject.GetComponent<Rigidbody>().rotation = Quaternion.Lerp(PlaneObject.GetComponent<Rigidbody>().rotation, Quaternion.LookRotation(CurrentDirection), Time.deltaTime);
-           PlaneObject.GetComponent<Rigidbody>().velocity = PlaneObject.transform.forward * Speed;
+            PlaneObject.GetComponent<Rigidbody>().rotation = Quaternion.Slerp(PlaneObject.GetComponent<Rigidbody>().rotation, Quaternion.LookRotation(CurrentDirection), Time.deltaTime);
+            PlaneObject.GetComponent<Rigidbody>().velocity = PlaneObject.transform.forward * Speed;
         }
         else
         {
@@ -106,10 +106,12 @@ public class PlaneController
         Speed = UnityEngine.Random.Range(PlaneObject.MinSpeed, PlaneObject.Maxspeed);
         Origin = from;
         Destination = to;
+        TurningSpeed = 1.0f;
     }
 
     public void ChangeDirection(Vector3 hitPoint)
     {
+        Timer = 0;
         CurrentDirection = (new Vector3(hitPoint.x, PlaneObject.transform.position.y, hitPoint.z) - PlaneObject.transform.position).normalized;
     }
 
