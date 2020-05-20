@@ -55,6 +55,7 @@ public class Wave
         if (ActiveAirports.All(x => !x.FlightsActive))
         {
             NextWave();
+            CameraControl.Instance.MoveCamera();
         }
     }
 }

@@ -10,11 +10,16 @@ public class GameManger : MonoBehaviour
 
     public static GameManger Instance;
 
-    private Wave Wave;
+    public Wave Wave;
+
     private void Awake()
     {
         Instance = this;
+    }
+    private void Start()
+    {
         Wave = new Wave(this);
+        CameraControl.Instance.MoveCamera();
     }
 
     private void Update()
