@@ -11,8 +11,8 @@ public class Wave
 
     private float AirportNumber;
     private float FlightNumber;
-    private float FlightInterval;
-
+    private float MaxFlightInterval;
+    private float MinFlightInterval;
 
 
     public Wave(GameManger manger)
@@ -21,7 +21,9 @@ public class Wave
         ActiveAirports = new List<Airport>();
         AirportNumber = manger.Settings.StartingAirportNumber;
         FlightNumber = manger.Settings.StartingFlightPerAirport;
-        FlightInterval = manger.Settings.FlightTimeInterval;
+        MaxFlightInterval = manger.Settings.MaxFlightTimeInterval;
+        MinFlightInterval = manger.Settings.MinFlightTimeInterval;
+        Debug.Log("Max:" + MaxFlightInterval + "Min:" + MinFlightInterval);
         foreach (Airport airport in GameManger.Instance.AirPorts)
         {
             airport.AirportEmptied += AirportEmpty;
@@ -35,8 +37,10 @@ public class Wave
         WaveNumber++;
         AirportNumber += GameManger.Instance.Settings.AirportIncreasePerWave;
         FlightNumber += GameManger.Instance.Settings.FlightIncreasePerWave;
-        FlightInterval -= GameManger.Instance.Settings.FlightTimeIntervalAcceleration;
-
+        MaxFlightInterval -= GameManger.Instance.Settings.FlightTimeIntervalAcceleration;
+        if (MaxFlightInterval < MinFlightInterval)
+            MaxFlightInterval = MinFlightInterval;
+        Debug.Log("Max:" + MaxFlightInterval + "Min:" + MinFlightInterval);
         ActiveAirports = GameManger.Instance.AirPorts.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
         ScheuleFlights();
     }
@@ -45,7 +49,7 @@ public class Wave
     {
         foreach (Airport item in ActiveAirports)
         {
-            item.ScheduleFlights(Mathf.FloorToInt(FlightNumber), FlightInterval);
+            item.ScheduleFlights(Mathf.FloorToInt(FlightNumber), MinFlightInterval, MaxFlightInterval);
         }
 
     }

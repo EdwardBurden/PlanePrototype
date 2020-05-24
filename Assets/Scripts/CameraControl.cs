@@ -28,7 +28,6 @@ public class CameraControl : MonoBehaviour
     {
         Vector3[] points = new Vector3[] { Vector3.zero, Vector3.zero };
         ActivePositions = GameManger.Instance.Wave.ActiveAirports.Select(x => x.transform.position).ToList();
-        Debug.Log(ActivePositions.Count);
         //todo make faster
         Vector3[] testpoints = new Vector3[] { ActivePositions[0], ActivePositions[0] };
         foreach (var item in ActivePositions)
@@ -48,7 +47,5 @@ public class CameraControl : MonoBehaviour
         }
         float distanceMax = Vector3.Distance(points[0], points[1]);
         TargetPosition = new Vector3((points[0].x + points[1].x) / 2, distanceMax, (points[0].z + points[1].z) / 2);
-        Debug.Log(points[0]);
-        Debug.Log(points[1]);
     }
 }

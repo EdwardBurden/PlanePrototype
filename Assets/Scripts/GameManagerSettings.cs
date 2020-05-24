@@ -13,6 +13,7 @@ public class GameManagerSettings : ScriptableObject
     public int StartingFlightPerAirport;
     public float FlightIncreasePerWave;
 
-    public float FlightTimeInterval;
+    public float MaxFlightTimeInterval;
+    public float MinFlightTimeInterval;
     public float FlightTimeIntervalAcceleration;
 }

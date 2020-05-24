@@ -29,6 +29,8 @@ public class Airport : MonoBehaviour
 
     public bool FlightsActive;
 
+    private float TimeToNextSpawn;
+
     private void Start()
     {
         UI = Instantiate(UIPrefab, Canvas.transform);
@@ -36,13 +38,21 @@ public class Airport : MonoBehaviour
         FlightsActive = false;
     }
 
-    private IEnumerator Spawn(int amount, float time)
+    private void Update()
+    {
+        TimeToNextSpawn -= Time.deltaTime;
+        UI.UpdateTime(TimeToNextSpawn);
+    }
+
+    private IEnumerator Spawn(int amount, float mintime, float maxtime)
     {
         FlightsActive = true;
         int i = 0;
         while (i < amount)
         {
-            yield return new WaitForSeconds(time);
+            TimeToNextSpawn = Random.Range(mintime, maxtime);
+            Debug.Log(TimeToNextSpawn);
+            yield return new WaitForSeconds(TimeToNextSpawn);
             SpawnPlane();
             i++;
         }
@@ -50,9 +60,9 @@ public class Airport : MonoBehaviour
         AirportEmptied.Invoke();
     }
 
-    internal void ScheduleFlights(int flightNumber, float time)
+    internal void ScheduleFlights(int flightNumber, float min, float max)
     {
-        StartCoroutine(Spawn(flightNumber, time));
+        StartCoroutine(Spawn(flightNumber, min, max));
 
     }
 
