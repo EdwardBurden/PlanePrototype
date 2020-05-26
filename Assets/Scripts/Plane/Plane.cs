@@ -116,8 +116,9 @@ public class Plane : MonoBehaviour
     private void Update()
     {
         PlaneController.HandleUpdate();
-        PlaneForward.forward = PlaneController.CurrentDirection;
-     //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
+        PlaneForward.rotation = Quaternion.LookRotation(PlaneController.CurrentDirection);
+       // PlaneForward.forward = PlaneController.CurrentDirection;
+       //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
     }
 
     public void Die()

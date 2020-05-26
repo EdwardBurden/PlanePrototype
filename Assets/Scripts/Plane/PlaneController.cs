@@ -111,8 +111,11 @@ public class PlaneController
 
     public void ChangeDirection(Vector3 hitPoint)
     {
-        Timer = 0;
-        CurrentDirection = (new Vector3(hitPoint.x, PlaneObject.transform.position.y, hitPoint.z) - PlaneObject.transform.position).normalized;
+        if (State == PlaneState.Flying)
+        {
+            Timer = 0;
+            CurrentDirection = (new Vector3(hitPoint.x, PlaneObject.transform.position.y, hitPoint.z) - PlaneObject.transform.position).normalized;
+        }
     }
 
     public void Fly()

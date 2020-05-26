@@ -32,14 +32,32 @@ public class PlaneMovementInput : MonoBehaviour
 
     private void HandleClick()
     {
+        if (Input.GetMouseButton(0))
+        {
+            if (ClickPlane)
+            {
+                RaycastHit hit = CheckIfObjectIsInFocus("PlaneLocation");
+                if (hit.collider != null)
+                {
+                    ClickPlane.SetTarget(hit.point);
+
+                }
+                //ClickPlane.OffClick();
+            }
+            //ClickPlane = null;
+
+        }
         if (Input.GetMouseButtonUp(0))
         {
+          
             RayCastInfo<Plane> clickable = CheckIfObjectIsInFocus<Plane>();
             if (clickable.Focused && clickable.FocusObject != ClickPlane)
             {
-                //new plane clicked
                 if (ClickPlane)
+                {
                     ClickPlane.OffClick();
+                    ClickPlane = null;
+                }
                 ClickPlane = clickable.FocusObject;
                 ClickPlane.OnClick();
             }
@@ -47,17 +65,11 @@ public class PlaneMovementInput : MonoBehaviour
             {
                 if (ClickPlane)
                 {
-                    RaycastHit hit = CheckIfObjectIsInFocus("PlaneLocation");
-                    if (hit.collider != null)
-                    {
-                        ClickPlane.SetTarget(hit.point);
-
-                    }
-                    //ClickPlane.OffClick();
+                    ClickPlane.OffClick();
+                    ClickPlane = null;
                 }
-                //ClickPlane = null;
-
             }
+
         }
 
     }
