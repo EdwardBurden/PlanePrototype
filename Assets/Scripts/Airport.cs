@@ -82,8 +82,8 @@ public class Airport : MonoBehaviour
     public void SpawnPlane(FlightSchedule schedule)
     {
         Plane plane = Instantiate(GameManger.Instance.Settings.PlanePrefab, transform.position, Quaternion.identity, DynamicSpawn.transform);
-        Vector3 random = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f)).normalized;
-        Vector3 direction = (schedule.Destination.transform.position - schedule.Departure.transform.position).normalized;
+        Vector3 random = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
+        Vector3 direction = ((schedule.Destination.transform.position+ random) - schedule.Departure.transform.position).normalized;
         int passengers = Random.Range(MinPassengers, MaxPassengers); PassengersPool -= passengers;
         int fuel = Random.Range(MinFuel, MaxFuel);
 
