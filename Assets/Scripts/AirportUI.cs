@@ -10,8 +10,14 @@ public class AirportUI : MonoBehaviour
     public Image SpawnPoint;
     public Image Entrance;
     public Image Exit;
-    public Text Passengers;
-    public Text TimeTillNext;
+
+    public Text PassengersText;
+    public Text TimeTillNextText;
+    public Text FlightsLeftText;
+
+    public int Passangers;
+    public float Time;
+    public int Flights;
 
     public void Init(Airport airport)
     {
@@ -19,16 +25,16 @@ public class AirportUI : MonoBehaviour
         SpawnPoint.GetComponent<FolloObjectUiComponent>().Init(airport.SpawnPoint);
         Entrance.GetComponent<FolloObjectUiComponent>().Init(airport.Entrance);
         Exit.GetComponent<FolloObjectUiComponent>().Init(airport.Exit);
-        UpdatePassengers(airport.PassengersPool);
+        //UpdatePassengers(airport.PassengersPool);
+       // UpdateFlights(airport.FlightsLeft());
     }
 
-    internal void UpdatePassengers(int passengersPool)
-    {
-        Passengers.text = "P: " + passengersPool;
-    }
 
-    public void UpdateTime(float time)
+    public void UpdateUI()
     {
-        TimeTillNext.text = time.ToString();
+        PassengersText.text = "P: " + Passangers.ToString();
+        TimeTillNextText.text = Time.ToString();
+        FlightsLeftText.text = Flights.ToString();
     }
+  
 }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PlaneUi : MonoBehaviour
 {
+    public Text Destination;
     public Text Passengers;
     public Text Speed;
     public Text Fuel;
@@ -15,6 +16,8 @@ public class PlaneUi : MonoBehaviour
     {
         Data = plane;
         GetComponent<FolloObjectUiComponent>().Init(plane.transform);
+
+        Destination.text = plane.Schedule.Destination.name;
         Passengers.text = "P " + plane.GetPassengers();
         Speed.text = "S " + plane.GetSpeed();
         Fuel.text = "F " + plane.GetFuel();
@@ -24,7 +27,6 @@ public class PlaneUi : MonoBehaviour
     {
         if (Data)
         {
-
             Fuel.text = "F " + Data.GetFuel();
         }
     }

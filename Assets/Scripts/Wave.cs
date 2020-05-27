@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Wave
 {
@@ -47,9 +48,20 @@ public class Wave
 
     private void ScheuleFlights()
     {
-        foreach (Airport item in ActiveAirports)
+        foreach (Airport airportStart in ActiveAirports)
         {
-            item.ScheduleFlights(Mathf.FloorToInt(FlightNumber), MinFlightInterval, MaxFlightInterval);
+            float timetotal = 0;
+            List<FlightSchedule> flights = new List<FlightSchedule>();
+            for (int i = 0; i < Mathf.FloorToInt(FlightNumber); i++)
+            {
+                List<Airport> available = ActiveAirports.Where(x => x != airportStart).ToList();
+                timetotal += Random.Range(MinFlightInterval, MaxFlightInterval);
+                int index = Random.Range(0, available.Count);
+
+                FlightSchedule flight = new FlightSchedule(airportStart, available[index], timetotal);
+                flights.Add(flight);
+            }
+            airportStart.SetFlights(flights);
         }
 
     }

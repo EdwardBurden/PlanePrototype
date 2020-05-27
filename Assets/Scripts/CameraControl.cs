@@ -45,7 +45,7 @@ public class CameraControl : MonoBehaviour
                 points = testpoints;
             }
         }
-        float distanceMax = Vector3.Distance(points[0], points[1]);
+        float distanceMax = Vector3.Distance(points[0], points[1]) * 2;
         TargetPosition = new Vector3((points[0].x + points[1].x) / 2, distanceMax, (points[0].z + points[1].z) / 2);
     }
 }

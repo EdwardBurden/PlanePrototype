@@ -30,60 +30,65 @@ public class Airport : MonoBehaviour
     public bool FlightsActive;
 
     private float TimeToNextSpawn;
+    private int SpawnIndex;
+    private List<FlightSchedule> Flights;
 
     private void Start()
     {
         UI = Instantiate(UIPrefab, Canvas.transform);
         UI.Init(this);
-        FlightsActive = false;
+        FlightsActive = true;
+        SpawnIndex = 0;
+    }
+
+    public void SetFlights(List<FlightSchedule> flightSchedules)
+    {
+        SpawnIndex = 0;
+        Flights = flightSchedules;
+        FlightsActive = true;
+        TimeToNextSpawn = 0;
     }
 
     private void Update()
     {
-        TimeToNextSpawn -= Time.deltaTime;
-        UI.UpdateTime(TimeToNextSpawn);
-    }
-
-    private IEnumerator Spawn(int amount, float mintime, float maxtime)
-    {
-        FlightsActive = true;
-        int i = 0;
-        while (i < amount)
+        if (Flights != null && SpawnIndex < Flights.Count)
         {
-            TimeToNextSpawn = Random.Range(mintime, maxtime);
-            Debug.Log(TimeToNextSpawn);
-            yield return new WaitForSeconds(TimeToNextSpawn);
-            SpawnPlane();
-            i++;
+            UI.Time = (Flights[SpawnIndex].TimeToDeparture - TimeToNextSpawn);
+            if (TimeToNextSpawn > Flights[SpawnIndex].TimeToDeparture)
+            {
+                SpawnPlane(Flights[SpawnIndex]);
+                SpawnIndex++;
+                if (SpawnIndex == Flights.Count)
+                {
+                    FlightsActive = false;
+                    AirportEmptied.Invoke();
+                }
+            }
+            UI.Flights = (Flights.Count - SpawnIndex);
+
         }
-        FlightsActive = false;
-        AirportEmptied.Invoke();
-    }
-
-    internal void ScheduleFlights(int flightNumber, float min, float max)
-    {
-        StartCoroutine(Spawn(flightNumber, min, max));
-
+        TimeToNextSpawn += Time.deltaTime;
+        UI.UpdateUI();
     }
 
     public void OnLand(Plane plane)
     {
         plane.DestroyUI();
         PassengersPool += (int)plane.GetPassengers();
-        UI.UpdatePassengers(PassengersPool);
+        UI.Passangers = PassengersPool;
         Destroy(plane.gameObject);
     }
 
-    public void SpawnPlane()
+    public void SpawnPlane(FlightSchedule schedule)
     {
-
-        Vector3 direction = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
         Plane plane = Instantiate(GameManger.Instance.Settings.PlanePrefab, transform.position, Quaternion.identity, DynamicSpawn.transform);
+        Vector3 random = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f)).normalized;
+        Vector3 direction = (schedule.Destination.transform.position - schedule.Departure.transform.position).normalized;
         int passengers = Random.Range(MinPassengers, MaxPassengers); PassengersPool -= passengers;
         int fuel = Random.Range(MinFuel, MaxFuel);
-        plane.Init(fuel, passengers, direction, this, null, Canvas);
-        plane.Death += GameManger.Instance.PlanePool.OnDeath;
-        UI.UpdatePassengers(PassengersPool);
 
+        plane.Init(fuel, passengers, direction, this, null, Canvas, schedule);
+        plane.Death += GameManger.Instance.PlanePool.OnDeath;
+        UI.Passangers = PassengersPool;
     }
 }

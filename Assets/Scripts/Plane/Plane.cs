@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
+    public FlightSchedule Schedule;
+
     public GameObject DeadPlanePrefab;
     private PlaneController PlaneController;
 
@@ -26,6 +28,7 @@ public class Plane : MonoBehaviour
     public virtual void Awake()
     {
         Selection.Stop(); DebugLineColor = new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
+        PlaneForward.gameObject.SetActive(false);
     }
 
     public void OnHover()
@@ -70,6 +73,7 @@ public class Plane : MonoBehaviour
             Selected = true;
             ParticleSystem.MainModule main = Selection.main;
             main.startColor = new ParticleSystem.MinMaxGradient(Color.green); Selection.Play();
+            PlaneForward.gameObject.SetActive(true);
         }
 
     }
@@ -79,6 +83,7 @@ public class Plane : MonoBehaviour
         {
             Selected = false;
             Selection.Stop();
+            PlaneForward.gameObject.SetActive(false);
         }
     }
 
@@ -87,20 +92,26 @@ public class Plane : MonoBehaviour
         return PlaneController.Fuel;
     }
 
-    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to, Canvas canvas)
+    public void Init(int fuel, int passengers, Vector3 direction, Airport from, Airport to, Canvas canvas, FlightSchedule schedule)
     {
         Selection.Stop();
         PlaneController = new PlaneController(this);
         PlaneController.TakeOff(fuel, passengers, direction, from, to);
+        Schedule = schedule;
         Ui = Instantiate(UiPrefab, canvas.transform);
         Ui.Init(this);
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Airport"))
         {
-            PlaneController.Land(collision.gameObject.GetComponentInParent<Airport>());
+            Airport airport = collision.gameObject.GetComponentInParent<Airport>();
+            if (airport == Schedule.Destination)
+            {
+                PlaneController.Land(airport);
+            }
         }
         else
         {
@@ -117,8 +128,8 @@ public class Plane : MonoBehaviour
     {
         PlaneController.HandleUpdate();
         PlaneForward.rotation = Quaternion.LookRotation(PlaneController.CurrentDirection);
-       // PlaneForward.forward = PlaneController.CurrentDirection;
-       //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
+        // PlaneForward.forward = PlaneController.CurrentDirection;
+        //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
     }
 
     public void Die()
