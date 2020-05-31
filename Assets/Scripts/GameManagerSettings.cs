@@ -16,4 +16,10 @@ public class GameManagerSettings : ScriptableObject
     public float MaxFlightTimeInterval;
     public float MinFlightTimeInterval;
     public float FlightTimeIntervalAcceleration;
+
+
+    public int MaxFuel;
+    public int MinFuel;
+    public int MaxPassengers;
+    public int MinPassengers;
 }

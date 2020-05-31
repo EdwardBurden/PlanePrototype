@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManger : MonoBehaviour
@@ -7,6 +8,7 @@ public class GameManger : MonoBehaviour
     public GameManagerSettings Settings;
     public List<Airport> AirPorts;
     public PlanePool PlanePool;
+    public DepartureListUi FlightList;
 
     public static GameManger Instance;
 
@@ -20,15 +22,16 @@ public class GameManger : MonoBehaviour
     {
         Wave = new Wave(this);
         CameraControl.Instance.MoveCamera();
+        FlightList.UpdateFlightList(Wave.AllFlights);
     }
 
-    private void Update()
+    public void AirportEmpty()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Wave.ActiveAirports.All(x => !x.FlightsActive))
         {
             Wave.NextWave();
+            CameraControl.Instance.MoveCamera();
+            FlightList.UpdateFlightList(Wave.AllFlights);
         }
     }
-
-
 }

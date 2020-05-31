@@ -13,41 +13,43 @@ public class Wave
     private float AirportNumber;
     private float FlightNumber;
     private float MaxFlightInterval;
-    private float MinFlightInterval;
 
+    private GameManagerSettings Settings;
+    private List<Airport> GlobalAirports;
+    public List<FlightSchedule> AllFlights;
 
     public Wave(GameManger manger)
     {
+        AllFlights = new List<FlightSchedule>();
+        Settings = manger.Settings;
+        GlobalAirports = manger.AirPorts;
         WaveNumber = 0;
         ActiveAirports = new List<Airport>();
-        AirportNumber = manger.Settings.StartingAirportNumber;
-        FlightNumber = manger.Settings.StartingFlightPerAirport;
-        MaxFlightInterval = manger.Settings.MaxFlightTimeInterval;
-        MinFlightInterval = manger.Settings.MinFlightTimeInterval;
-        Debug.Log("Max:" + MaxFlightInterval + "Min:" + MinFlightInterval);
-        foreach (Airport airport in GameManger.Instance.AirPorts)
+        AirportNumber = Settings.StartingAirportNumber;
+        FlightNumber = Settings.StartingFlightPerAirport;
+        MaxFlightInterval = Settings.MaxFlightTimeInterval;
+        foreach (Airport airport in GlobalAirports)
         {
-            airport.AirportEmptied += AirportEmpty;
+            airport.AirportEmptied += manger.AirportEmpty;
         }
-        ActiveAirports = GameManger.Instance.AirPorts.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
+        ActiveAirports = GlobalAirports.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
         ScheuleFlights();
     }
 
     public void NextWave()
     {
         WaveNumber++;
-        AirportNumber += GameManger.Instance.Settings.AirportIncreasePerWave;
-        FlightNumber += GameManger.Instance.Settings.FlightIncreasePerWave;
-        MaxFlightInterval -= GameManger.Instance.Settings.FlightTimeIntervalAcceleration;
-        if (MaxFlightInterval < MinFlightInterval)
-            MaxFlightInterval = MinFlightInterval;
-        Debug.Log("Max:" + MaxFlightInterval + "Min:" + MinFlightInterval);
-        ActiveAirports = GameManger.Instance.AirPorts.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
+        AirportNumber += Settings.AirportIncreasePerWave;
+        FlightNumber += Settings.FlightIncreasePerWave;
+        MaxFlightInterval -= Settings.FlightTimeIntervalAcceleration;
+        MaxFlightInterval = Mathf.Clamp(MaxFlightInterval - Settings.FlightTimeIntervalAcceleration, Settings.MinFlightTimeInterval, Settings.MaxFlightTimeInterval);
+        ActiveAirports = GlobalAirports.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
         ScheuleFlights();
     }
 
     private void ScheuleFlights()
     {
+        AllFlights = new List<FlightSchedule>();
         foreach (Airport airportStart in ActiveAirports)
         {
             float timetotal = 0;
@@ -55,23 +57,20 @@ public class Wave
             for (int i = 0; i < Mathf.FloorToInt(FlightNumber); i++)
             {
                 List<Airport> available = ActiveAirports.Where(x => x != airportStart).ToList();
-                timetotal += Random.Range(MinFlightInterval, MaxFlightInterval);
+                timetotal += Random.Range(Settings.MinFlightTimeInterval, MaxFlightInterval);
                 int index = Random.Range(0, available.Count);
-
-                FlightSchedule flight = new FlightSchedule(airportStart, available[index], timetotal);
+                int passengers = Random.Range(Settings.MinPassengers, Settings.MaxPassengers);
+                int fuel = Random.Range(Settings.MinFuel, Settings.MaxFuel);
+                FlightSchedule flight = new FlightSchedule(airportStart, available[index], timetotal, passengers, fuel);
                 flights.Add(flight);
+
             }
             airportStart.SetFlights(flights);
+            AllFlights.AddRange(flights);
         }
+
 
     }
 
-    private void AirportEmpty()
-    {
-        if (ActiveAirports.All(x => !x.FlightsActive))
-        {
-            NextWave();
-            CameraControl.Instance.MoveCamera();
-        }
-    }
+   
 }

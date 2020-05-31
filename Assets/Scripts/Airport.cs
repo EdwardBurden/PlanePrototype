@@ -18,14 +18,9 @@ public class Airport : MonoBehaviour
     AirportUI UI;
 
     //plane generateion
-    public int MaxFuel;
-    public int MinFuel;
-    public int MaxPassengers;
-    public int MinPassengers;
     public int PassengersPool;
 
-    public delegate void WaveEvent();
-    public event WaveEvent AirportEmptied;
+    public Action AirportEmptied;
 
     public bool FlightsActive;
 
@@ -53,7 +48,6 @@ public class Airport : MonoBehaviour
     {
         if (Flights != null && SpawnIndex < Flights.Count)
         {
-            UI.Time = (Flights[SpawnIndex].TimeToDeparture - TimeToNextSpawn);
             if (TimeToNextSpawn > Flights[SpawnIndex].TimeToDeparture)
             {
                 SpawnPlane(Flights[SpawnIndex]);
@@ -64,18 +58,14 @@ public class Airport : MonoBehaviour
                     AirportEmptied.Invoke();
                 }
             }
-            UI.Flights = (Flights.Count - SpawnIndex);
-
         }
         TimeToNextSpawn += Time.deltaTime;
-        UI.UpdateUI();
     }
 
     public void OnLand(Plane plane)
     {
         plane.DestroyUI();
         PassengersPool += (int)plane.GetPassengers();
-        UI.Passangers = PassengersPool;
         Destroy(plane.gameObject);
     }
 
@@ -83,12 +73,9 @@ public class Airport : MonoBehaviour
     {
         Plane plane = Instantiate(GameManger.Instance.Settings.PlanePrefab, transform.position, Quaternion.identity, DynamicSpawn.transform);
         Vector3 random = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
-        Vector3 direction = ((schedule.Destination.transform.position+ random) - schedule.Departure.transform.position).normalized;
-        int passengers = Random.Range(MinPassengers, MaxPassengers); PassengersPool -= passengers;
-        int fuel = Random.Range(MinFuel, MaxFuel);
-
-        plane.Init(fuel, passengers, direction, this, null, Canvas, schedule);
+        Vector3 direction = ((schedule.Destination.transform.position + random) - schedule.Departure.transform.position).normalized;
+        PassengersPool -= schedule.Passengers;
+        plane.Init(schedule.Fuel, schedule.Passengers, direction, this, null, Canvas, schedule);
         plane.Death += GameManger.Instance.PlanePool.OnDeath;
-        UI.Passangers = PassengersPool;
     }
 }
