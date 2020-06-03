@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManger : MonoBehaviour
 {
@@ -9,11 +10,13 @@ public class GameManger : MonoBehaviour
     public List<Airport> AirPorts;
     public PlanePool PlanePool;
     public DepartureListUi FlightList;
+    public Text WaveText;
 
     public static GameManger Instance;
 
     public Wave Wave;
 
+    float timeleft;
     private void Awake()
     {
         Instance = this;
@@ -21,6 +24,20 @@ public class GameManger : MonoBehaviour
     private void Start()
     {
         Wave = new Wave(this);
+        timeleft = Settings.WavePauseTime;
+        StartCoroutine(NewWaveUpdate());
+    }
+
+    private IEnumerator NewWaveUpdate()
+    {
+        while (timeleft > 0)
+        {
+            timeleft -= Time.deltaTime;
+            WaveText.text = "New Wave Starting in: " + timeleft.ToString("n0");
+            yield return null;
+        }
+        Wave.ScheuleFlights();
+        WaveText.text = "Wave " + (Wave.WaveNumber + 1) + " Started";
         CameraControl.Instance.MoveCamera();
         FlightList.UpdateFlightList(Wave.AllFlights);
     }
@@ -30,8 +47,8 @@ public class GameManger : MonoBehaviour
         if (Wave.ActiveAirports.All(x => !x.FlightsActive))
         {
             Wave.NextWave();
-            CameraControl.Instance.MoveCamera();
-            FlightList.UpdateFlightList(Wave.AllFlights);
+            timeleft = Settings.WavePauseTime;
+            StartCoroutine(NewWaveUpdate());
         }
     }
 }

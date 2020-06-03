@@ -33,7 +33,7 @@ public class Wave
             airport.AirportEmptied += manger.AirportEmpty;
         }
         ActiveAirports = GlobalAirports.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
-        ScheuleFlights();
+      //  ScheuleFlights();
     }
 
     public void NextWave()
@@ -44,10 +44,10 @@ public class Wave
         MaxFlightInterval -= Settings.FlightTimeIntervalAcceleration;
         MaxFlightInterval = Mathf.Clamp(MaxFlightInterval - Settings.FlightTimeIntervalAcceleration, Settings.MinFlightTimeInterval, Settings.MaxFlightTimeInterval);
         ActiveAirports = GlobalAirports.OrderBy(x => x.AppearanceOrder).Take(Mathf.FloorToInt(AirportNumber)).ToList();
-        ScheuleFlights();
+       // ScheuleFlights();
     }
 
-    private void ScheuleFlights()
+    public void ScheuleFlights()
     {
         AllFlights = new List<FlightSchedule>();
         foreach (Airport airportStart in ActiveAirports)

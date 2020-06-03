@@ -22,4 +22,6 @@ public class GameManagerSettings : ScriptableObject
     public int MinFuel;
     public int MaxPassengers;
     public int MinPassengers;
+
+    public float WavePauseTime;
 }
