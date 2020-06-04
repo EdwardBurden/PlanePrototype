@@ -18,9 +18,10 @@ public class Airport : MonoBehaviour
     AirportUI UI;
 
     //plane generateion
-    public int PassengersPool;
+    public float PassengersPool;
 
     public Action AirportEmptied;
+    public Action PassengersEmpty;
 
     public bool FlightsActive;
 
@@ -60,6 +61,9 @@ public class Airport : MonoBehaviour
             }
         }
         TimeToNextSpawn += Time.deltaTime;
+        PassengersPool += GameManger.Instance.Settings.PassengersIncreasePerFrame;
+        int rounded = Mathf.FloorToInt(PassengersPool);
+        UI.UpdatePassengers(rounded);
     }
 
     public void OnLand(Plane plane)
@@ -71,11 +75,17 @@ public class Airport : MonoBehaviour
 
     public void SpawnPlane(FlightSchedule schedule)
     {
-        Plane plane = Instantiate(GameManger.Instance.Settings.PlanePrefab, transform.position, Quaternion.identity, DynamicSpawn.transform);
-        Vector3 random = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
-        Vector3 direction = ((schedule.Destination.transform.position + random) - schedule.Departure.transform.position).normalized;
         PassengersPool -= schedule.Passengers;
-        plane.Init(schedule.Fuel, schedule.Passengers, direction, this, null, Canvas, schedule);
-        plane.Death += GameManger.Instance.PlanePool.OnDeath;
+        if (PassengersPool > 0)
+        {
+            Plane plane = Instantiate(GameManger.Instance.Settings.PlanePrefab, transform.position, Quaternion.identity, DynamicSpawn.transform);
+            Vector3 random = new Vector3(Random.Range(-100f, 100f), 0, Random.Range(-100f, 100f));
+            Vector3 direction = ((schedule.Destination.transform.position + random) - schedule.Departure.transform.position).normalized;
+            PassengersPool -= schedule.Passengers;
+            plane.Init(schedule.Fuel, schedule.Passengers, direction, this, null, Canvas, schedule);
+            plane.Death += GameManger.Instance.PlanePool.OnDeath;
+        }
+        else
+            PassengersEmpty.Invoke();
     }
 }

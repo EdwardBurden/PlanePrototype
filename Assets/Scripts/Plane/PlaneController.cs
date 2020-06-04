@@ -29,7 +29,6 @@ public class PlaneController
     public float TurningSpeed;
     public Vector3 CurrentDirection;
 
-    private float Timer;
 
     public PlaneController(Plane planeObject)
     {
@@ -61,9 +60,7 @@ public class PlaneController
 
     private void HandleTakeOff()
     {
-
-        Timer += Time.deltaTime;
-        PlaneObject.transform.position = Vector3.Lerp(Origin.SpawnPoint.position, Origin.Exit.position, Timer);
+        PlaneObject.transform.position += ((Origin.Exit.position - PlaneObject.transform.position).normalized * Speed * Time.deltaTime);
         PlaneObject.transform.rotation = (Quaternion.LookRotation((Origin.Exit.position - PlaneObject.transform.position)).normalized);
         if (Vector3.Distance(PlaneObject.transform.position, Origin.Exit.position) < 10)
         {
@@ -88,9 +85,8 @@ public class PlaneController
 
     private void HandleLanding()
     {
-        Timer += Time.deltaTime;
-        PlaneObject.transform.position = Vector3.Lerp(Target.Entrance.position, Target.SpawnPoint.position, Timer);
-        PlaneObject.transform.rotation = (Quaternion.LookRotation((PlaneObject.transform.position - Target.Entrance.position)).normalized);
+        PlaneObject.transform.position += ((Target.SpawnPoint.position - PlaneObject.transform.position).normalized * Speed * Time.deltaTime);
+        PlaneObject.transform.rotation = (Quaternion.LookRotation((Target.SpawnPoint.position - PlaneObject.transform.position)).normalized);
         if (Vector3.Distance(PlaneObject.transform.position, Target.SpawnPoint.position) < 1)
         {
             Target.OnLand(PlaneObject);
@@ -113,14 +109,13 @@ public class PlaneController
     {
         if (State == PlaneState.Flying)
         {
-            Timer = 0;
-            CurrentDirection = (new Vector3(hitPoint.x, PlaneObject.transform.position.y, hitPoint.z) - PlaneObject.transform.position).normalized;
+            CurrentDirection = (new Vector3(hitPoint.x, PlaneObject.transform.position.y, hitPoint.z) - PlaneObject.transform.position);
+            CurrentDirection = new Vector3(CurrentDirection.x, 0, CurrentDirection.z).normalized;
         }
     }
 
     public void Fly()
     {
-        Timer = 0;
         State = PlaneState.Flying;
         PlaneObject.GetComponent<Rigidbody>().isKinematic = false;
         PlaneObject.GetComponent<Collider>().enabled = true;

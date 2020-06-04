@@ -10,13 +10,12 @@ public class GameManger : MonoBehaviour
     public List<Airport> AirPorts;
     public PlanePool PlanePool;
     public DepartureListUi FlightList;
+
     public Text WaveText;
-
     public static GameManger Instance;
-
     public Wave Wave;
-
     float timeleft;
+
     private void Awake()
     {
         Instance = this;
@@ -26,6 +25,13 @@ public class GameManger : MonoBehaviour
         Wave = new Wave(this);
         timeleft = Settings.WavePauseTime;
         StartCoroutine(NewWaveUpdate());
+    }
+
+    public void End()
+    {
+        Time.timeScale = 0;
+        WaveText.text = "Dead";
+        Wave.ActiveAirports.ForEach(x => x.enabled = false);
     }
 
     private IEnumerator NewWaveUpdate()
@@ -42,7 +48,7 @@ public class GameManger : MonoBehaviour
         FlightList.UpdateFlightList(Wave.AllFlights);
     }
 
-    public void AirportEmpty()
+    public void FlightsEmpty()
     {
         if (Wave.ActiveAirports.All(x => !x.FlightsActive))
         {

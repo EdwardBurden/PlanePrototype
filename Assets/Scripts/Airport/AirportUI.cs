@@ -11,6 +11,7 @@ public class AirportUI : MonoBehaviour
     public Image Entrance;
     public Image Exit;
     public Text AirportName;
+    public Text PassengerAmount;
 
     public void Init(Airport airport)
     {
@@ -20,5 +21,9 @@ public class AirportUI : MonoBehaviour
         Entrance.GetComponent<FolloObjectUiComponent>().Init(airport.Entrance);
         Exit.GetComponent<FolloObjectUiComponent>().Init(airport.Exit);
     }
-  
+
+    internal void UpdatePassengers(int passengersPool)
+    {
+        PassengerAmount.text = passengersPool.ToString();
+    }
 }

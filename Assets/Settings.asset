@@ -18,10 +18,12 @@ MonoBehaviour:
   AirportIncreasePerWave: 0.25
   StartingFlightPerAirport: 1
   FlightIncreasePerWave: 0.5
-  MaxFlightTimeInterval: 30
-  MinFlightTimeInterval: 15
+  MaxFlightTimeInterval: 10
+  MinFlightTimeInterval: 3
   FlightTimeIntervalAcceleration: 0.1
   MaxFuel: 50
   MinFuel: 40
   MaxPassengers: 100
   MinPassengers: 100
+  PassengersIncreasePerFrame: 0.5
+  WavePauseTime: 5

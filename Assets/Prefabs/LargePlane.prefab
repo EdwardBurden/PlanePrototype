@@ -350,7 +350,7 @@ MonoBehaviour:
     type: 3}
   PlaneForward: {fileID: 3300343165392417963}
   MinSpeed: 50
-  Maxspeed: 100
+  Maxspeed: 200
   Selection: {fileID: 7348514866489569437}
 --- !u!54 &7458096639063326054
 Rigidbody:

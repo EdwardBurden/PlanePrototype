@@ -103,42 +103,44 @@ public class Plane : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Airport"))
+        if (other.gameObject.CompareTag("Airport"))
         {
-            Airport airport = collision.gameObject.GetComponentInParent<Airport>();
+            Airport airport = other.gameObject.GetComponentInParent<Airport>();
             if (airport == Schedule.Destination)
             {
                 PlaneController.Land(airport);
             }
         }
-        else
-        {
-            Die();
-        }
+    }
+
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        Die();
     }
 
     internal void DestroyUI()
-    {
-        Destroy(Ui.gameObject);
-    }
+{
+    Destroy(Ui.gameObject);
+}
 
-    private void Update()
-    {
-        PlaneController.HandleUpdate();
-        PlaneForward.rotation = Quaternion.LookRotation(PlaneController.CurrentDirection);
-        // PlaneForward.forward = PlaneController.CurrentDirection;
-        //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
-    }
+private void Update()
+{
+    PlaneController.HandleUpdate();
+    PlaneForward.rotation = Quaternion.LookRotation(PlaneController.CurrentDirection);
+    // PlaneForward.forward = PlaneController.CurrentDirection;
+    //   Debug.DrawLine(this.transform.position, this.transform.position + (PlaneController.CurrentDirection * 200), DebugLineColor, 5);
+}
 
-    public void Die()
-    {
-        Death.Invoke(this);
-    }
+public void Die()
+{
+    Death.Invoke(this);
+}
 
-    internal void SetTarget(Vector3 hitPoint)
-    {
-        PlaneController.ChangeDirection(hitPoint);
-    }
+internal void SetTarget(Vector3 hitPoint)
+{
+    PlaneController.ChangeDirection(hitPoint);
+}
 }
