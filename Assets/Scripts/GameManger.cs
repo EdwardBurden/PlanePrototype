@@ -10,6 +10,7 @@ public class GameManger : MonoBehaviour
     public List<Airport> AirPorts;
     public PlanePool PlanePool;
     public DepartureListUi FlightList;
+    public EndMenu EndMenu;
 
     public Text WaveText;
     public static GameManger Instance;
@@ -20,6 +21,7 @@ public class GameManger : MonoBehaviour
     {
         Instance = this;
     }
+
     private void Start()
     {
         Wave = new Wave(this);
@@ -32,6 +34,7 @@ public class GameManger : MonoBehaviour
         Time.timeScale = 0;
         WaveText.text = "Dead";
         Wave.ActiveAirports.ForEach(x => x.enabled = false);
+        EndMenu.Open();
     }
 
     private IEnumerator NewWaveUpdate()

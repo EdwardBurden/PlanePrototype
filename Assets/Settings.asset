@@ -25,5 +25,5 @@ MonoBehaviour:
   MinFuel: 40
   MaxPassengers: 100
   MinPassengers: 100
-  PassengersIncreasePerFrame: 0.5
+  PassengersIncreasePerFrame: -1
   WavePauseTime: 5
