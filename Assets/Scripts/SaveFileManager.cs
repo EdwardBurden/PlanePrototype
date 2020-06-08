@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System;
-using System.Text.Json;
 
 public static class SaveFileManager 
 {
@@ -18,8 +17,8 @@ public static class SaveFileManager
             string filePath = Path.Combine(folderPath, name);
 
             SaveFile saveFile = new SaveFile(name, DateTime.Now, wave);
-            string json = JsonSerializer.Serialize(saveFile);
-            File.WriteAllText(filePath, textObj);
+            string json = JsonUtility.ToJson(saveFile);
+            File.WriteAllText(filePath, json);
             return true;
         }
         catch (Exception ex)

@@ -49,7 +49,7 @@ public class PlaneMovementInput : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-          
+
             RayCastInfo<Plane> clickable = CheckIfObjectIsInFocus<Plane>();
             if (clickable.Focused && clickable.FocusObject != ClickPlane)
             {
@@ -138,7 +138,18 @@ public class PlaneMovementInput : MonoBehaviour
                     foundObject = foundobject;
                 }
                 else
-                    inSight = false;
+                {
+                    foundobject = raycasts[i].collider.gameObject.GetComponentInParent<T>();
+                    if (foundobject)
+                    {
+                        inSight = true;
+                        hit = raycasts[i];
+                        foundObject = foundobject;
+                    }
+                    else
+                        inSight = false;
+                }
+
             }
         }
         return new RayCastInfo<T>(inSight, hit, foundObject);
